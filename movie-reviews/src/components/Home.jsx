@@ -33,7 +33,7 @@ const Home = () => {
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Discover reviews, ratings, and insights from fellow movie lovers.
           </p>
-          <button className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg text-lg font-semibold">
+          <button className="mt-6 px-6 py-3 bg-violet-800 hover:bg-violet-700 rounded-lg text-lg font-semibold">
             Browse Movies
           </button>
         </div>

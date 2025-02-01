@@ -32,7 +32,7 @@ function SignUp() {
               type="text"
               id="name"
               name="name"
-              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-700"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -45,7 +45,7 @@ function SignUp() {
               type="email"
               id="email"
               name="email"
-              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-700"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -58,7 +58,7 @@ function SignUp() {
               type="password"
               id="password"
               name="password"
-              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-700"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -71,7 +71,7 @@ function SignUp() {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-700"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -80,7 +80,7 @@ function SignUp() {
 
           <button
             type="submit"
-            className="w-full mt-4 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
+            className="w-full mt-4 p-2 bg-violet-800 text-white rounded-lg hover:bg-violet-700 focus:outline-none"
           >
             Sign Up
           </button>
@@ -88,7 +88,7 @@ function SignUp() {
 
         {/* Login Link */}
         <div className="mt-4 text-center text-gray-400">
-          <p>Already have an account? <a href="/login" className="text-blue-400">Login</a></p>
+          <p>Already have an account? <a href="/login" className="text-violet-400 hover:underline hover:text-violet-500">Login</a></p>
         </div>
       </div>
     </div>
