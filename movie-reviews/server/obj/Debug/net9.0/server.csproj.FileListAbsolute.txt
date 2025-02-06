@@ -6,8 +6,16 @@ C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\server.runtimeconfig.json
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\server.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\server.pdb
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\BCrypt.Net-Next.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\DnsClient.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Microsoft.OpenApi.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\MongoDB.Bson.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\MongoDB.Driver.dll
@@ -16,6 +24,7 @@ C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\ZstdSharp.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\obj\Debug\net9.0\server.csproj.AssemblyReference.cache
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\obj\Debug\net9.0\server.GeneratedMSBuildEditorConfig.editorconfig
