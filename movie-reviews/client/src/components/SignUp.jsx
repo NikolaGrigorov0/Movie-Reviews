@@ -10,7 +10,7 @@ function SignUp() {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
-      return;
+      throw new Error()
     }
     console.log("Name:", name);
     console.log("Email:", email);
