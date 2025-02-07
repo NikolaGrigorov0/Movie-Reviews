@@ -24,15 +24,21 @@ namespace server.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] User user)
         {
-            if (_userService.GetUserById(user.Email) != null)
+            Console.WriteLine(user.Username);
+            if (user == null)
+            {
+            return BadRequest("Invalid user data.");
+            }
+
+            var existingUser = _userService.GetUserById(user.Id);
+            if (existingUser != null)
             {
                 return BadRequest("User already exists.");
             }
 
-            var createdUser = _userService.Register(user);
-            return Ok(new { message = "User registered successfully", user = createdUser });
+            var registeredUser = _userService.Register(user);
+            return Ok(registeredUser);
         }
-
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { registerUser } from "../services/authService";
+import { redirect } from "react-router-dom";
 
 function SignUp() {
-  const [name, setName] = useState("");
+  const [username, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -12,10 +14,12 @@ function SignUp() {
       alert("Passwords do not match!");
       throw new Error()
     }
-    console.log("Name:", name);
+    registerUser(username, email, password);
+    console.log("User:", username);
     console.log("Email:", email);
     console.log("Password:", password);
     // Add further sign-up logic
+    redirect('/');
   };
 
   return (
@@ -27,13 +31,13 @@ function SignUp() {
         {/* Sign Up Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm text-gray-300">Username</label>
+            <label htmlFor="username" className="block text-sm text-gray-300">Username</label>
             <input
-              type="text"
-              id="name"
-              name="name"
+              type="username"
+              id="username"
+              name="username"
               className="w-full mt-2 p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-700"
-              value={name}
+              value={username}
               onChange={(e) => setName(e.target.value)}
               required
             />

@@ -12,14 +12,16 @@ namespace server.Services
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("MongoDb"));
-            var database = client.GetDatabase(config["DatabaseName"]);
+            var database = client.GetDatabase(config["DatabaseName"]); // Ensure "DatabaseName" is set in appsettings.json
             _users = database.GetCollection<User>("Users");
         }
 
         public User Register(User user)
         {
-            // Hash password before saving
+
+            // Hash only the password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+
             _users.InsertOne(user);
             return user;
         }
