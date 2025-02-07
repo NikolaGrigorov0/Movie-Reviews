@@ -1,4 +1,4 @@
-const loginUser = async (email, password) => {
+export const loginUser = async (email, password) => {
     const response = await fetch('http://localhost:5213/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -15,11 +15,11 @@ const loginUser = async (email, password) => {
     }
 };
 
-const registerUser = async (username, email, password) => {
+export const registerUser = async (username, email, password) => {
     const response = await fetch('http://localhost:5213/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, passwordHash: password })
+        body: JSON.stringify({ username, email, passwordHash: password }) 
     });
 
     const data = await response.json();
