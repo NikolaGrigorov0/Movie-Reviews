@@ -24,6 +24,7 @@ namespace server.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] User user)
         {
+            Console.WriteLine(user.Username);
             if (user == null)
             {
             return BadRequest("Invalid user data.");
