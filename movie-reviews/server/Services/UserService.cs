@@ -37,5 +37,6 @@ namespace server.Services
         }
 
         public User GetUserById(string id) => _users.Find(user => user.Id == id).FirstOrDefault();
+        public User GetUserByEmail(string email) => _users.Find(user => user.Email == email).FirstOrDefault();
     }
 }

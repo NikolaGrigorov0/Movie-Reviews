@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { loginUser } from "../services/authService";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -6,6 +7,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    loginUser(email, password)
     console.log("Email:", email);
     console.log("Password:", password);
     // Add further login logic here 
