@@ -21,6 +21,7 @@ function SignUp() {
       if (response.ok) {
         console.log("User registered successfully!");
         navigate("/");
+        window.location.reload(); 
       } else {
         const errorData = await response.json();
         console.error("Registration failed:", errorData);
