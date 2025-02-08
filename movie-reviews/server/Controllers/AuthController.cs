@@ -21,24 +21,28 @@ namespace server.Controllers
             _config = config;
         }
 
-        [HttpPost("register")]
+       [HttpPost("register")]
         public IActionResult Register([FromBody] User user)
         {
-            Console.WriteLine(user.Username);
-            if (user == null)
+            if (user == null || string.IsNullOrWhiteSpace(user.Email) || string.IsNullOrWhiteSpace(user.PasswordHash))
             {
-            return BadRequest("Invalid user data.");
+                return BadRequest("Invalid user data.");
             }
 
-            var existingUser = _userService.GetUserById(user.Id);
+            // Check if user already exists (by email, not ID)
+            var existingUser = _userService.GetUserByEmail(user.Email);
             if (existingUser != null)
             {
-                return BadRequest("User already exists.");
+                return BadRequest(new { message = "User already exists." });
             }
 
+            // Ensure the ID is generated automatically
+            user.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
+
             var registeredUser = _userService.Register(user);
-            return Ok(registeredUser);
+            return Ok(new { message = "User registered successfully!", user = registeredUser });
         }
+        
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {

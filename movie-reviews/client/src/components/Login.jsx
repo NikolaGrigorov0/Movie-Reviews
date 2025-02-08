@@ -1,14 +1,34 @@
 import React, { useState } from "react";
+import { loginUser } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Email:", email);
     console.log("Password:", password);
-    // Add further login logic here 
+
+     try {
+          const response = await loginUser(email, password);
+      
+          if (response.ok) {
+            console.log("User logged in successfully!");
+            navigate("/");
+            window.location.reload(); 
+          } else {
+            const errorData = await response.json();
+            console.error("Login failed:", errorData);
+            alert(errorData.message || "Login failed. Please try again.");
+          }
+        } catch (error) {
+          console.error("Error during login:", error);
+          alert("An error occurred. Please try again later.");
+        }
+
   };
 
   return (

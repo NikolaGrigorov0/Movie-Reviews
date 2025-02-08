@@ -1,25 +1,36 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/authService";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const [username, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       throw new Error()
     }
-    registerUser(username, email, password);
-    console.log("User:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
-    // Add further sign-up logic
-    redirect('/');
+    try {
+      const response = await registerUser(username, email, password);
+  
+      if (response.ok) {
+        console.log("User registered successfully!");
+        navigate("/");
+        window.location.reload(); 
+      } else {
+        const errorData = await response.json();
+        console.error("Registration failed:", errorData);
+        alert(errorData.message || "Registration failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("An error occurred. Please try again later.");
+    }
   };
 
   return (
