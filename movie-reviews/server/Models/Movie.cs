@@ -21,7 +21,7 @@ namespace server.Models
         [BsonElement("starRating")]
         public double StarRating { get; set; }  // ⭐ Added Rating
 
-         [BsonElement("reviews")]
+        [BsonElement("reviews")]
         public List<Review> Reviews { get; set; } = new List<Review>(); // ✅ Updated to store multiple reviews
     }
 }
