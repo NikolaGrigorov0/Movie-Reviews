@@ -7,11 +7,22 @@ using MongoDB.Driver;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.Configure<MongoClientSettings>(
-    builder.Configuration.GetSection("ConnectionStrings"));
+
+// Register MongoDB services
+var mongoDbConnectionString = builder.Configuration.GetConnectionString("MongoDb");
+var mongoDbName = builder.Configuration["DatabaseName"];
+
+builder.Services.AddSingleton<IMongoClient>(sp => 
+    new MongoClient(mongoDbConnectionString));
+builder.Services.AddSingleton<IMongoDatabase>(sp => 
+    sp.GetRequiredService<IMongoClient>().GetDatabase(mongoDbName));
+
+// Register other services
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<MovieService>();
+builder.Services.AddSingleton<ReviewService>();
 
-
+// JWT Authentication
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -26,7 +37,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-    builder.Services.AddCors(options =>
+// CORS
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
@@ -36,17 +48,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                   .AllowAnyMethod();
         });
 });
-    
-builder.Services.AddSingleton<MovieService>();
+
+// Controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
+// Middleware
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
@@ -57,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
