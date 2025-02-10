@@ -15,6 +15,9 @@ namespace server.Models
         [BsonElement("email")]
         public required string Email { get; set; }
 
+        [BsonElement("profilePhoto")]
+        public string ProfilePhoto { get; set; } = "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+
         [BsonElement("passwordHash")]
         public required string PasswordHash { get; set; }
     }

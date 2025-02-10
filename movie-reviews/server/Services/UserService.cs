@@ -18,10 +18,8 @@ namespace server.Services
 
         public User Register(User user)
         {
-
             // Hash only the password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-
             _users.InsertOne(user);
             return user;
         }
@@ -38,5 +36,37 @@ namespace server.Services
 
         public User GetUserById(string id) => _users.Find(user => user.Id == id).FirstOrDefault();
         public User GetUserByEmail(string email) => _users.Find(user => user.Email == email).FirstOrDefault();
+
+        // ✅ Update user details (PUT request)
+        public async Task<bool> UpdateUserAsync(string id, string? newUsername, string? newPassword, string? newProfilePhoto)
+        {
+            var update = Builders<User>.Update;
+            var updates = new List<UpdateDefinition<User>>();
+
+            if (!string.IsNullOrEmpty(newUsername))
+            {
+                updates.Add(update.Set(u => u.Username, newUsername));
+            }
+
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+                updates.Add(update.Set(u => u.PasswordHash, hashedPassword));
+            }
+
+            if (!string.IsNullOrEmpty(newProfilePhoto))
+            {
+                updates.Add(update.Set(u => u.ProfilePhoto, newProfilePhoto));
+            }
+
+            if (updates.Count == 0) return false; // No updates to apply
+
+            var result = await _users.UpdateOneAsync(
+                u => u.Id == id,
+                update.Combine(updates)
+            );
+
+            return result.ModifiedCount > 0;
+        }
     }
 }

@@ -45,7 +45,7 @@ const Home = () => {
 
       {/* Top 3 Movies */}
       <section className="px-6 py-16">
-        <h2 className="text-3xl font-bold mb-6">Top 3</h2>
+        <h2 className="text-3xl font-bold mb-6">Trending</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {topMovies.map((movie) => (
             <div key={movie.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
