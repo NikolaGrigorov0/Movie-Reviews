@@ -2,6 +2,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchUser, getUserIdFromToken } from '../services/userService'
 
 const publicNavigation = [
   { name: 'Top 10', href: '/top10', current: false },
@@ -23,7 +24,10 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const [isLogged, setIsLogged] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const userId = getUserIdFromToken(token);
 
   useEffect(() => {
   if(Boolean(localStorage.getItem("token")) !== isLogged){
@@ -35,6 +39,13 @@ export default function Navbar() {
     navigate('/');
     window.location.reload(); 
   }
+  
+  useEffect(async () => {
+    if (userId) {
+        const data = await fetchUser(userId);
+        setProfilePhoto(data.profilePhoto);
+    }
+}, [userId]);
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -102,7 +113,7 @@ export default function Navbar() {
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src={profilePhoto}
                     className="size-8 rounded-full"
                   />
                 </MenuButton>
