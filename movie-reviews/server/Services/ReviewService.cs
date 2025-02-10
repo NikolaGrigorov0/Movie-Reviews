@@ -42,21 +42,56 @@ namespace server.Services
             }
 
             // Validate MovieId
-            var movieExists = await _movies.Find(m => m.Id == review.MovieId).AnyAsync();
-            if (!movieExists)
+            var movie = await _movies.Find(m => m.Id == review.MovieId).FirstOrDefaultAsync();
+            if (movie == null)
             {
                 throw new ArgumentException("Movie does not exist.");
             }
 
-            // If both UserId and MovieId are valid, insert the review
+            // Insert the review into the Reviews collection
             await _reviews.InsertOneAsync(review);
+
+            // Add the review to the Movie's review list
+            var filter = Builders<Movie>.Filter.Eq(m => m.Id, review.MovieId);
+            var update = Builders<Movie>.Update.Push(m => m.Reviews, review);
+            await _movies.UpdateOneAsync(filter, update);
+
+            // Recalculate the movie's average rating
+            await UpdateMovieRating(review.MovieId);
+
             return true;
         }
 
         public async Task<bool> DeleteReviewAsync(string id)
         {
+            var review = await _reviews.Find(r => r.Id == id).FirstOrDefaultAsync();
+            if (review == null)
+            {
+                return false;
+            }
+
+            // Delete the review
             var result = await _reviews.DeleteOneAsync(r => r.Id == id);
+
+            // Remove review from the Movie's reviews list
+            var filter = Builders<Movie>.Filter.Eq(m => m.Id, review.MovieId);
+            var update = Builders<Movie>.Update.PullFilter(m => m.Reviews, r => r.Id == id);
+            await _movies.UpdateOneAsync(filter, update);
+
+            // Recalculate the movie's average rating
+            await UpdateMovieRating(review.MovieId);
+
             return result.DeletedCount > 0;
+        }
+
+        private async Task UpdateMovieRating(string movieId)
+        {
+            var reviews = await _reviews.Find(r => r.MovieId == movieId).ToListAsync();
+            double newAverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
+
+            var filter = Builders<Movie>.Filter.Eq(m => m.Id, movieId);
+            var update = Builders<Movie>.Update.Set(m => m.StarRating, newAverageRating);
+            await _movies.UpdateOneAsync(filter, update);
         }
     }
 }
