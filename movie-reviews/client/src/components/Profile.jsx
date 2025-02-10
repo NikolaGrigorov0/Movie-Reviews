@@ -1,57 +1,36 @@
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { fetchUser, getUserIdFromToken } from "../services/userService";
 
-const getUserIdFromToken = (token) => {
-    try {
-        const decoded = jwtDecode(token);
-        return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-    } catch (error) {
-        console.error("Invalid token:", error);
-        return null;
-    }
-};
 
 const Profile = () => {
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState("");
     const [oldPassword, setOldPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
+    const [password, setPassword] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
 
     const token = localStorage.getItem("token");
     const userId = getUserIdFromToken(token);
 
-    useEffect(() => {
+    useEffect(async () => {
         if (userId) {
-            fetchUser();
-        }
-    }, [userId]);
-
-    const fetchUser = async () => {
-        try {
-            const response = await fetch(`http://localhost:5213/api/users/${userId}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch user data.");
-            }
-            const data = await response.json();
+            const data = await fetchUser(userId);
             setUser(data);
             setUsername(data.username);
             setProfilePhoto(data.profilePhoto);
-        } catch (error) {
-            console.error("Error fetching user:", error);
         }
-    };
+    }, [userId]);
+
 
     const handleUpdate = async () => {
         if (!userId) {
-            alert("User ID not found. Please log in.");
+            alert("User not found. Please log in.");
             return;
         }
 
         const updatedUser = {
             username: username,
-            oldPassword: oldPassword,
-            newPassword: newPassword,
+            password: password,
             profilePhoto: profilePhoto
         };
 
@@ -60,7 +39,6 @@ const Profile = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(updatedUser)
             });
@@ -68,7 +46,7 @@ const Profile = () => {
             if (!response.ok) throw new Error("Failed to update profile");
 
             alert("Profile updated successfully!");
-            fetchUser(); // Refresh user data
+            fetchUser(); 
         } catch (error) {
             console.error("Error updating profile:", error);
         }
@@ -96,7 +74,7 @@ const Profile = () => {
                 <div className="flex justify-center mb-4 relative">
                     <label htmlFor="profilePhotoInput" className="cursor-pointer">
                         <img 
-                            src="https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"
+                            src={profilePhoto}
                             alt="Profile" 
                             className="w-24 h-24 rounded-full border-4 border-purple-500"
                         />
@@ -126,8 +104,8 @@ const Profile = () => {
                     />
                     <input 
                         type="password" 
-                        value={newPassword} 
-                        onChange={(e) => setNewPassword(e.target.value)} 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
                         className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
                         placeholder="New password" 
                     />
