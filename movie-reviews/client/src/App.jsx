@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
+import EditProfile from "./components/EditProfile";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
      <Route path='/login' element={<Login/>}/>
      <Route path='/signUp' element={<SignUp/>}/>
      <Route path='/profile' element={<Profile/>}/>
+     <Route path='/editprofile' element={<EditProfile/>}/>
      </Routes>
       
       {/* Footer */}

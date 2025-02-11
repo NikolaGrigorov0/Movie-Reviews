@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using server.Models;
 using BCrypt.Net;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace server.Services
 {
@@ -12,7 +13,7 @@ namespace server.Services
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("MongoDb"));
-            var database = client.GetDatabase(config["DatabaseName"]); // Ensure "DatabaseName" is set in appsettings.json
+            var database = client.GetDatabase(config["DatabaseName"]); 
             _users = database.GetCollection<User>("Users");
         }
 
@@ -37,12 +38,15 @@ namespace server.Services
         public User GetUserById(string id) => _users.Find(user => user.Id == id).FirstOrDefault();
         public User GetUserByEmail(string email) => _users.Find(user => user.Email == email).FirstOrDefault();
 
-        // ✅ Update user details (PUT request)
-        public async Task<bool> UpdateUserAsync(string id, string? newUsername, string? newPassword, string? newProfilePhoto)
+        public async Task<bool> UpdateUserAsync(string id, string? newUsername, string? OldPassword, string? newPassword, string? newProfilePhoto)
         {
             var update = Builders<User>.Update;
             var updates = new List<UpdateDefinition<User>>();
+            var user = GetUserById(id);
 
+            if(!BCrypt.Net.BCrypt.Verify(OldPassword, user.PasswordHash)){
+                return false;
+            }
             if (!string.IsNullOrEmpty(newUsername))
             {
                 updates.Add(update.Set(u => u.Username, newUsername));
@@ -59,7 +63,7 @@ namespace server.Services
                 updates.Add(update.Set(u => u.ProfilePhoto, newProfilePhoto));
             }
 
-            if (updates.Count == 0) return false; // No updates to apply
+            if (updates.Count == 0) return false; 
 
             var result = await _users.UpdateOneAsync(
                 u => u.Id == id,

@@ -16,7 +16,6 @@ namespace server.Controllers
             _userService = userService;
         }
 
-        // ✅ Get user by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(string id)
         {
@@ -25,21 +24,20 @@ namespace server.Controllers
             return Ok(user);
         }
 
-        // ✅ Update user details (PUT request)
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
         {
-            bool updated = await _userService.UpdateUserAsync(id, request.Username, request.Password, request.ProfilePhoto);
+            bool updated = await _userService.UpdateUserAsync(id, request.Username,request.OldPassword, request.NewPassword, request.ProfilePhoto);
             if (!updated) return BadRequest("No updates were made.");
             return Ok("User updated successfully.");
         }
     }
 
-    // ✅ Request model for updating user
     public class UpdateUserRequest
     {
         public string? Username { get; set; }
-        public string? Password { get; set; }
+        public string? OldPassword {get; set;}
+        public string? NewPassword { get; set; }
         public string? ProfilePhoto { get; set; }
     }
 }

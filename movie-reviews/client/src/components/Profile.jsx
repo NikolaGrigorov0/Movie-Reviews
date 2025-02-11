@@ -1,67 +1,37 @@
 import { useState, useEffect } from "react";
 import { fetchUser, getUserIdFromToken } from "../services/userService";
+import { useNavigate } from "react-router-dom";
 
 
 const Profile = () => {
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState("");
-    const [oldPassword, setOldPassword] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
+    const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
     const userId = getUserIdFromToken(token);
 
-    useEffect(async () => {
-        if (userId) {
-            const data = await fetchUser(userId);
-            setUser(data);
-            setUsername(data.username);
-            setProfilePhoto(data.profilePhoto);
-        }
+    useEffect(() => {
+        const fetchData = async () => {
+            if (userId) {
+                const data = await fetchUser(userId);
+                setUser(data);
+                setUsername(data.username);
+                setEmail(data.email);
+                setProfilePhoto(data.profilePhoto);
+            }
+        };
+    
+        fetchData();
     }, [userId]);
 
+    const handleEdit = () => {
+        navigate('/editProfile');
 
-    const handleUpdate = async () => {
-        if (!userId) {
-            alert("User not found. Please log in.");
-            return;
-        }
+    }
 
-        const updatedUser = {
-            username: username,
-            password: password,
-            profilePhoto: profilePhoto
-        };
-
-        try {
-            const response = await fetch(`http://localhost:5213/api/users/${userId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updatedUser)
-            });
-
-            if (!response.ok) throw new Error("Failed to update profile");
-
-            alert("Profile updated successfully!");
-            fetchUser(); 
-        } catch (error) {
-            console.error("Error updating profile:", error);
-        }
-    };
-
-    const handleProfilePhotoChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setProfilePhoto(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     if (!userId) {
         return <p className="text-center text-white">Please log in to view your profile.</p>;
@@ -76,44 +46,33 @@ const Profile = () => {
                         <img 
                             src={profilePhoto}
                             alt="Profile" 
-                            className="w-24 h-24 rounded-full border-4 border-purple-500"
+                            className="w-24 h-24 rounded-full border-0"
                         />
                     </label>
-                    <input 
-                        type="file" 
-                        id="profilePhotoInput" 
-                        accept="image/*" 
-                        className="hidden"
-                        onChange={handleProfilePhotoChange} 
-                    />
                 </div>
                 <div className="space-y-4">
+                    <p>Username:</p>
                     <input 
                         type="text" 
                         value={username} 
-                        onChange={(e) => setUsername(e.target.value)} 
-                        className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                        className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none cursor-not-allowed" 
                         placeholder="New username" 
+                        readOnly
                     />
-                    <input 
-                        type="password" 
-                        value={oldPassword} 
-                        onChange={(e) => setOldPassword(e.target.value)} 
-                        className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
-                        placeholder="Old password" 
-                    />
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
-                        placeholder="New password" 
-                    />
+                    <p>Email:</p>
+                <input 
+                    type="text" 
+                    value={email} 
+                    className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none cursor-not-allowed" 
+                    placeholder="email" 
+                    readOnly 
+                />
+                   
                     <button 
-                        onClick={handleUpdate} 
+                        onClick={handleEdit} 
                         className="w-full bg-purple-600 hover:bg-purple-700 transition-all text-white py-2 rounded-lg font-bold"
                     >
-                        Update Profile
+                        Edit profile
                     </button>
                 </div>
             </div>
