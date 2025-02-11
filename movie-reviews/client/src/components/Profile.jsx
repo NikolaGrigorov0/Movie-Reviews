@@ -7,27 +7,29 @@ const Profile = () => {
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
-    const [oldPassword, setOldPassword] = useState("");
-    const [password, setPassword] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
     const userId = getUserIdFromToken(token);
 
-    useEffect(async () => {
-        if (userId) {
-            const data = await fetchUser(userId);
-            setUser(data);
-            setUsername(data.username);
-            setEmail(data.email)
-            setProfilePhoto(data.profilePhoto);
-        }
+    useEffect(() => {
+        const fetchData = async () => {
+            if (userId) {
+                const data = await fetchUser(userId);
+                setUser(data);
+                setUsername(data.username);
+                setEmail(data.email);
+                setProfilePhoto(data.profilePhoto);
+            }
+        };
+    
+        fetchData();
     }, [userId]);
 
     const handleEdit = () => {
         navigate('/editProfile');
-        window.location.reload(); 
+
     }
 
 

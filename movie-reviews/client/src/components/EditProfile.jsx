@@ -8,20 +8,24 @@ const EditProfile = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [oldPassword, setOldPassword] = useState("");
-    const [password, setPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
 
     const token = localStorage.getItem("token");
     const userId = getUserIdFromToken(token);
 
-    useEffect(async () => {
-        if (userId) {
-            const data = await fetchUser(userId);
-            setUser(data);
-            setUsername(data.username);
-            setEmail(data.email)
-            setProfilePhoto(data.profilePhoto);
-        }
+    useEffect(() => {
+        const fetchData = async () => {
+            if (userId) {
+                const data = await fetchUser(userId);
+                setUser(data);
+                setUsername(data.username);
+                setEmail(data.email);
+                setProfilePhoto(data.profilePhoto);
+            }
+        };
+    
+        fetchData();
     }, [userId]);
 
 
@@ -33,7 +37,8 @@ const EditProfile = () => {
 
         const updatedUser = {
             username: username,
-            password: password,
+            oldPassword: oldPassword,
+            newPassword: newPassword,
             profilePhoto: profilePhoto
         };
 
@@ -117,8 +122,8 @@ const EditProfile = () => {
                     />
                     <input 
                         type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
+                        value={newPassword} 
+                        onChange={(e) => setNewPassword(e.target.value)} 
                         className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
                         placeholder="New password" 
                     />
