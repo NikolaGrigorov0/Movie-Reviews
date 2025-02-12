@@ -24,13 +24,28 @@ namespace server.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
-        {
-            bool updated = await _userService.UpdateUserAsync(id, request.Username,request.OldPassword, request.NewPassword, request.ProfilePhoto);
-            if (!updated) return BadRequest("No updates were made.");
-            return Ok("User updated successfully.");
-        }
+       [HttpPut("{id}")]
+public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
+{
+    if (request == null)
+    {
+        return BadRequest("Invalid request body.");
+    }
+
+    bool updated = await _userService.UpdateUserAsync(
+        id,
+        request.Username,  
+        request.OldPassword, 
+        request.NewPassword,  
+        request.ProfilePhoto  
+    );
+
+    if (!updated)
+    {
+        return BadRequest("No updates were made.");
+    }
+    return Ok("User updated successfully.");
+}
     }
 
     public class UpdateUserRequest

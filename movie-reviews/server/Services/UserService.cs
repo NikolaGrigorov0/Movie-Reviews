@@ -10,6 +10,7 @@ namespace server.Services
     {
         private readonly IMongoCollection<User> _users;
 
+
         public UserService(IConfiguration config)
         {
             var client = new MongoClient(config.GetConnectionString("MongoDb"));
@@ -19,7 +20,6 @@ namespace server.Services
 
         public User Register(User user)
         {
-            // Hash only the password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
             _users.InsertOne(user);
             return user;
@@ -38,39 +38,47 @@ namespace server.Services
         public User GetUserById(string id) => _users.Find(user => user.Id == id).FirstOrDefault();
         public User GetUserByEmail(string email) => _users.Find(user => user.Email == email).FirstOrDefault();
 
-        public async Task<bool> UpdateUserAsync(string id, string? newUsername, string? OldPassword, string? newPassword, string? newProfilePhoto)
+       public async Task<bool> UpdateUserAsync(string id, string? newUsername, string? oldPassword, string? newPassword, string? newProfilePhoto)
+{
+    var user = GetUserById(id);
+    if (user == null)
+    {
+        throw new ArgumentException("User not found");
+    }
+
+    if (!string.IsNullOrEmpty(newUsername))
+    {
+        user.Username = newUsername;
+    }
+
+    if (!string.IsNullOrEmpty(newProfilePhoto))
+    {
+        user.ProfilePhoto = newProfilePhoto;
+    }
+
+    if (!string.IsNullOrEmpty(oldPassword) && !string.IsNullOrEmpty(newPassword))
+    {
+        if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
         {
-            var update = Builders<User>.Update;
-            var updates = new List<UpdateDefinition<User>>();
-            var user = GetUserById(id);
-
-            if(!BCrypt.Net.BCrypt.Verify(OldPassword, user.PasswordHash)){
-                return false;
-            }
-            if (!string.IsNullOrEmpty(newUsername))
-            {
-                updates.Add(update.Set(u => u.Username, newUsername));
-            }
-
-            if (!string.IsNullOrEmpty(newPassword))
-            {
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
-                updates.Add(update.Set(u => u.PasswordHash, hashedPassword));
-            }
-
-            if (!string.IsNullOrEmpty(newProfilePhoto))
-            {
-                updates.Add(update.Set(u => u.ProfilePhoto, newProfilePhoto));
-            }
-
-            if (updates.Count == 0) return false; 
-
-            var result = await _users.UpdateOneAsync(
-                u => u.Id == id,
-                update.Combine(updates)
-            );
-
-            return result.ModifiedCount > 0;
+            throw new ArgumentException("Old password is incorrect");
         }
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+    }
+    else if (!string.IsNullOrEmpty(oldPassword) || !string.IsNullOrEmpty(newPassword))
+    {
+        throw new ArgumentException("Both old and new passwords must be provided to update the password.");
+    }
+
+    var update = Builders<User>.Update
+        .Set(u => u.Username, user.Username)
+        .Set(u => u.ProfilePhoto, user.ProfilePhoto)
+        .Set(u => u.PasswordHash, user.PasswordHash);
+
+    var result = await _users.UpdateOneAsync(u => u.Id == id, update);
+
+    return result.ModifiedCount > 0;
+}
+
+
     }
 }

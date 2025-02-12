@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchUser, getUserIdFromToken } from "../services/userService";
-
-
+import { ToastContainer, toast } from 'react-toastify';
 
 const EditProfile = () => {
     const [user, setUser] = useState(null);
@@ -10,6 +9,8 @@ const EditProfile = () => {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
+    const [error, setError] = useState("");
+    const [validationErrors, setValidationErrors] = useState({});
 
     const token = localStorage.getItem("token");
     const userId = getUserIdFromToken(token);
@@ -24,10 +25,35 @@ const EditProfile = () => {
                 setProfilePhoto(data.profilePhoto);
             }
         };
-    
+
         fetchData();
     }, [userId]);
 
+    const errorToast = (errormessage) => toast(errormessage);
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!username.trim()) {
+            errors.username = "Username is required.";
+        } else if (username.length < 3 || username.length > 20) {
+            errors.username = "Username must be between 3 and 20 characters.";
+        }
+
+        if (newPassword && !oldPassword) {
+            errors.oldPassword = "Old password is required to set a new password.";
+        }
+        if (newPassword && newPassword.length < 8) {
+            errors.newPassword = "New password must be at least 8 characters long.";
+        }
+
+        if (profilePhoto && profilePhoto.size > 5 * 1024 * 1024) { 
+            errors.profilePhoto = "Profile photo must be less than 5MB.";
+        }
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
 
     const handleUpdate = async () => {
         if (!userId) {
@@ -35,12 +61,24 @@ const EditProfile = () => {
             return;
         }
 
-        const updatedUser = {
-            username: username,
-            oldPassword: oldPassword,
-            newPassword: newPassword,
-            profilePhoto: profilePhoto
-        };
+        if (!validateForm()) {
+            return;
+        }
+
+        const updatedUser = {};
+
+        if (username && username !== user.username) {
+            updatedUser.username = username;
+        }
+        if (profilePhoto && profilePhoto !== user.profilePhoto) {
+            updatedUser.profilePhoto = profilePhoto;
+        }
+        if (oldPassword && newPassword) {
+            updatedUser.oldPassword = oldPassword;
+            updatedUser.newPassword = newPassword;
+        }
+
+        console.log("Sending request body:", JSON.stringify(updatedUser));
 
         try {
             const response = await fetch(`http://localhost:5213/api/users/${userId}`, {
@@ -48,21 +86,39 @@ const EditProfile = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(updatedUser)
+                body: JSON.stringify(updatedUser),
             });
 
-            if (!response.ok) throw new Error("Failed to update profile");
+            const responseText = await response.text(); 
 
-            fetchUser(); 
+            if (!response.ok) {
+                toast(responseText);
+                throw new Error(responseText);
+            }
+
+            const updatedData = await fetchUser(userId);
+            setUser(updatedData);
+            setUsername(updatedData.username);
+            setProfilePhoto(updatedData.profilePhoto);
+
+            alert("Profile updated successfully!");
         } catch (error) {
             console.error("Error updating profile:", error);
+            errorToast(error.message);
         }
-        window.location.reload(); 
     };
 
     const handleProfilePhotoChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                setValidationErrors((prev) => ({
+                    ...prev,
+                    profilePhoto: "Profile photo must be less than 5MB.",
+                }));
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setProfilePhoto(reader.result);
@@ -104,6 +160,10 @@ const EditProfile = () => {
                         className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
                         placeholder="New username" 
                     />
+                    {validationErrors.username && (
+                        <p className="text-red-500 text-sm">{validationErrors.username}</p>
+                    )}
+
                     <p>Email:</p>
                     <input 
                         type="text" 
@@ -112,6 +172,7 @@ const EditProfile = () => {
                         placeholder="email" 
                         readOnly 
                     />
+
                     <p>Password:</p>
                     <input 
                         type="password" 
@@ -120,6 +181,10 @@ const EditProfile = () => {
                         className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
                         placeholder="Old password" 
                     />
+                    {validationErrors.oldPassword && (
+                        <p className="text-red-500 text-sm">{validationErrors.oldPassword}</p>
+                    )}
+
                     <input 
                         type="password" 
                         value={newPassword} 
@@ -127,6 +192,16 @@ const EditProfile = () => {
                         className="w-full p-2 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
                         placeholder="New password" 
                     />
+                    {validationErrors.newPassword && (
+                        <p className="text-red-500 text-sm">{validationErrors.newPassword}</p>
+                    )}
+
+                    {validationErrors.profilePhoto && (
+                        <p className="text-red-500 text-sm">{validationErrors.profilePhoto}</p>
+                    )}
+
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+
                     <button 
                         onClick={handleUpdate} 
                         className="w-full bg-purple-600 hover:bg-purple-700 transition-all text-white py-2 rounded-lg font-bold"
