@@ -29,7 +29,7 @@ const EditProfile = () => {
         fetchData();
     }, [userId]);
 
-    const errorToast = (errormessage) => toast(errormessage);
+    const errorToast = (errormessage) => toast.error(errormessage);
 
     const validateForm = () => {
         const errors = {};
@@ -67,15 +67,25 @@ const EditProfile = () => {
 
         const updatedUser = {};
 
+        let isUpdated = false;
+
         if (username && username !== user.username) {
             updatedUser.username = username;
+            isUpdated = true;
         }
         if (profilePhoto && profilePhoto !== user.profilePhoto) {
             updatedUser.profilePhoto = profilePhoto;
+            isUpdated = true;
         }
-        if (oldPassword && newPassword) {
+        if (oldPassword && newPassword && oldPassword !== newPassword) {
             updatedUser.oldPassword = oldPassword;
             updatedUser.newPassword = newPassword;
+            isUpdated = true;
+        }
+
+        if (!isUpdated) {
+            toast.info("No changes were made.");
+            return;
         }
 
         console.log("Sending request body:", JSON.stringify(updatedUser));
@@ -92,7 +102,7 @@ const EditProfile = () => {
             const responseText = await response.text(); 
 
             if (!response.ok) {
-                toast(responseText);
+                toast.error(responseText);
                 throw new Error(responseText);
             }
 
@@ -101,7 +111,7 @@ const EditProfile = () => {
             setUsername(updatedData.username);
             setProfilePhoto(updatedData.profilePhoto);
 
-            alert("Profile updated successfully!");
+            toast.success("Profile updated successfully!");
         } catch (error) {
             console.error("Error updating profile:", error);
             errorToast(error.message);
@@ -210,6 +220,12 @@ const EditProfile = () => {
                     </button>
                 </div>
             </div>
+            <ToastContainer 
+                position="top-center"  // Toast positioned at the top center
+                autoClose={5000}        // Toast auto close time in milliseconds
+                hideProgressBar={true}  // Hide progress bar (optional)
+                closeButton={false}     // Optionally hide the close button
+            />
         </div>
     ) : (
         <p className="text-center text-white">Loading...</p>
