@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
+import MovieDetails from "./components/MovieDetails";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
      <Route path='/signUp' element={<SignUp/>}/>
      <Route path='/profile' element={<Profile/>}/>
      <Route path='/editprofile' element={<EditProfile/>}/>
+     <Route path='/movie/:id' element={<MovieDetails/>}/>
      </Routes>
       
       {/* Footer */}
