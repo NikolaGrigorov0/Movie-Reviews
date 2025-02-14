@@ -1,2 +1,6 @@
 @import "tailwindcss";
 
+.mask-star-2 {
+    -webkit-mask: url('https://cdn.jsdelivr.net/npm/@iconscout/unicons/svg/line/star.svg') no-repeat center / contain;
+    mask: url('https://cdn.jsdelivr.net/npm/@iconscout/unicons/svg/line/star.svg') no-repeat center / contain;
+  }

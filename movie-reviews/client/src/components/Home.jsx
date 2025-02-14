@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { fetchMovies } from "../services/movieService";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [topMovies, setTopMovies] = useState([]);
@@ -50,8 +51,8 @@ const Home = () => {
       <section className="relative text-center py-32 bg-gray-800 bg-[url('/images/thematrix.jpg')] bg-cover bg-center h-[780px] pt-75">
         <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.8)_100%)]"></div>
         <div className="relative z-10">
-          <h1 className="text-6xl font-extrabold mb-4">Explore the World of Cinema</h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <h1 className="text-6xl font-extrabold text-gray-500 mb-4">Explore the World of Cinema</h1>
+          <p className="text-lg font-extrabold text-gray-500 max-w-2xl mx-auto">
             Discover reviews, ratings, and insights from fellow movie lovers.
           </p>
           <button className="mt-6 px-6 py-3 bg-violet-800 hover:bg-violet-700 rounded-lg text-lg font-semibold">
@@ -61,11 +62,12 @@ const Home = () => {
       </section>
 
       {/* Trending Movies */}
+      
       <section className="px-6 py-16">
         <h2 className="text-3xl font-bold mb-6">Trending</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {topMovies.map((movie) => (
-            <div key={movie.id} className="bg-gray-800 p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center md:items-center justify-center">
+            <Link to={`/movie/${movie.id}`} key={movie.id} className="bg-gray-800 p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center md:items-center justify-center">
               <div className="w-full md:w-[50%] flex-shrink-0">
                 <img
                   src={movie.image || "https://via.placeholder.com/300"}
@@ -80,7 +82,7 @@ const Home = () => {
                   {generateReviewStars(movie.rating)}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
