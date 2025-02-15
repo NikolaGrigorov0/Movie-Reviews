@@ -40,7 +40,7 @@ const Profile = () => {
     return user ? (
         <div className="min-h-screen flex items-center justify-center bg-black text-white p-6">
             <div className="bg-gray-900 p-8 rounded-2xl shadow-lg w-full max-w-md">
-                <h1 className="text-2xl font-bold text-purple-400 text-center mb-6">Profile</h1>
+                <h1 className="text-2xl font-bold text-violet-600 text-center mb-6">Profile</h1>
                 <div className="flex justify-center mb-4 relative">
                     <label htmlFor="profilePhotoInput" className="cursor-pointer">
                         <img 
@@ -70,7 +70,7 @@ const Profile = () => {
                    
                     <button 
                         onClick={handleEdit} 
-                        className="w-full bg-purple-600 hover:bg-purple-700 transition-all text-white py-2 rounded-lg font-bold"
+                        className="w-full bg-violet-800 hover:bg-violet-600 transition-all text-white py-2 rounded-lg font-bold"
                     >
                         Edit profile
                     </button>
