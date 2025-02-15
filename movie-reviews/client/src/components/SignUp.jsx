@@ -146,6 +146,9 @@ function SignUp() {
             Sign Up
           </button>
         </form>
+        <div className="mt-4 text-center text-gray-400">
+          <p>Aleady have an account? <a href="/login" className="text-violet-400 hover:underline hover:text-violet-500">Log in</a></p>
+        </div>
       </div>
 
       <ToastContainer position="top-center" autoClose={3000} />
