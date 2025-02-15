@@ -19,6 +19,7 @@ namespace server.Controllers
         [HttpGet]
         public ActionResult<List<Movie>> Get() => _movieService.Get();
 
+
         [HttpGet("{id:length(24)}", Name = "GetMovie")]
         public ActionResult<Movie> Get(string id)
         {
@@ -50,6 +51,13 @@ namespace server.Controllers
             if (movie == null) return NotFound();
             _movieService.Remove(id);
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<List<Movie>>> SearchMovies([FromQuery] string query)
+        {
+            var movies = await _movieService.SearchMoviesAsync(query);
+            return Ok(movies);
         }
     }
 }

@@ -1,6 +1,8 @@
 using MongoDB.Driver;
 using server.Models;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace server.Services
 {
@@ -18,6 +20,12 @@ namespace server.Services
         public List<Movie> Get() => _movies.Find(movie => true).ToList();
 
         public Movie Get(string id) => _movies.Find(movie => movie.Id == id).FirstOrDefault();
+
+        public async Task<List<Movie>> SearchMoviesAsync(string query)
+        {
+            var filter = Builders<Movie>.Filter.Regex("title", new MongoDB.Bson.BsonRegularExpression(query, "i"));
+            return await _movies.Find(filter).Limit(5).ToListAsync();
+        }
 
         public Movie Create(Movie movie)
         {
