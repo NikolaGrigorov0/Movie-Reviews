@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { fetchUser, getUserIdFromToken } from "../services/userService";
+import { toast, ToastContainer } from "react-toastify";
 
 const generateReviewStars = (rating) => {
   const stars = [];
-  for (let i = 1; i <= 10; i++) {
+  const maxStars = 10;
+
+  for (let i = 1; i <= maxStars; i++) {
     if (rating >= i) {
       stars.push(
         <FontAwesomeIcon
@@ -13,7 +17,7 @@ const generateReviewStars = (rating) => {
           icon={faStar}
           className="text-yellow-400 text-2xl"
         />
-      ); // Full star
+      );
     } else if (rating >= i - 0.5) {
       stars.push(
         <FontAwesomeIcon
@@ -21,15 +25,15 @@ const generateReviewStars = (rating) => {
           icon={faStarHalfAlt}
           className="text-yellow-400 text-2xl"
         />
-      ); // Half star
+      );
     } else {
       stars.push(
         <FontAwesomeIcon
           key={`empty-${i}`}
           icon={faStar}
-          className="text-gray-500 text-2xl"
+          className="text-gray-700 text-2xl"
         />
-      ); // Empty star
+      );
     }
   }
   return stars;
@@ -41,6 +45,8 @@ const MovieDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
   const [newRating, setNewRating] = useState(0);
+  const [userDetails, setUserDetails] = useState({}); // Store user details for each review
+  const userId = getUserIdFromToken(localStorage.getItem("token"));
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -48,8 +54,17 @@ const MovieDetails = () => {
         const response = await fetch(`http://localhost:5213/api/movies/${id}`);
         if (!response.ok) throw new Error("Failed to fetch movie details");
         const data = await response.json();
+
         setMovie(data);
         setReviews(data.reviews || []);
+
+        // Fetch user details for each review
+        const userDetailsMap = {};
+        for (const review of data.reviews || []) {
+          const user = await fetchUser(review.userId);
+          userDetailsMap[review.userId] = user;
+        }
+        setUserDetails(userDetailsMap);
       } catch (error) {
         console.error("Error fetching movie:", error);
       }
@@ -60,33 +75,39 @@ const MovieDetails = () => {
 
   const handleAddReview = async () => {
     if (!newReview.trim() || newRating === 0) {
-      alert("Please add a review and select a star rating.");
+      toast.error("Please add a review and select a star rating.");
       return;
     }
-  
-    const reviewData = { text: newReview, rating: newRating, movieId: id };
-  
+
+    const reviewData = { userid: userId, movieId: id, description: newReview, rating: newRating };
+
     try {
       const response = await fetch("http://localhost:5213/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reviewData),
       });
-  
+
       if (!response.ok) {
-        const errorData = await response.json(); 
+        const errorData = await response.json();
         throw new Error(errorData.message || "Failed to submit review");
       }
-  
+
       const data = await response.json();
       console.log("Review submitted successfully:", data);
-  
-      setReviews([...reviews, { text: newReview, rating: newRating }]);
+
+      // Fetch the user details for the new review
+      const user = await fetchUser(userId);
+      setUserDetails((prev) => ({ ...prev, [userId]: user }));
+
+      // Add the new review to the reviews list
+      setReviews((prev) => [...prev, { ...reviewData, userId }]);
       setNewReview("");
       setNewRating(0);
+      window.location.reload();
     } catch (error) {
       console.error("Error adding review:", error);
-      alert(error.message || "An error occurred while submitting the review.");
+      toast.error("An error occurred while submitting the review.")
     }
   };
 
@@ -107,12 +128,10 @@ const MovieDetails = () => {
 
         <div className="w-full md:w-1/2 space-y-4">
           <p className="text-lg text-gray-300">{movie.description}</p>
-
-          {/* Movie Rating */}
           <div className="flex items-center space-x-2">
             <span className="text-lg font-semibold text-white">Rating:</span>
-            <div className="flex">{generateReviewStars(movie.rating)}</div>
-            <span className="text-gray-300 text-lg">({movie.rating}/10)</span>
+            <div className="flex">{movie.starRating ? generateReviewStars(movie.starRating) : "No rating available"}</div>
+            <span className="text-gray-300 text-lg">({movie.starRating}/10)</span>
           </div>
         </div>
       </div>
@@ -124,11 +143,22 @@ const MovieDetails = () => {
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
               <div key={index} className="bg-gray-800 p-4 rounded-lg shadow-md">
+                <div className="flex items-center mb-4">
+                  <img
+                    src={userDetails[review.userId]?.profilePhoto || "https://via.placeholder.com/50"}
+                    alt={`${userDetails[review.userId]?.username || "Anonymous"}'s profile`}
+                    className="w-10 h-10 rounded-full border border-gray-500"
+                  />
+                  <span className="ml-3 text-white font-semibold">
+                    {userDetails[review.userId]?.username || "Anonymous"}
+                  </span>
+                </div>
                 <div className="flex items-center mb-2">
                   {generateReviewStars(review.rating)}
                   <span className="ml-2 text-gray-400 text-lg">({review.rating}/10)</span>
                 </div>
-                <p className="text-gray-300">{review.text}</p>
+
+                <p className="text-gray-300">{review.description}</p>
               </div>
             ))
           ) : (
@@ -146,8 +176,6 @@ const MovieDetails = () => {
           value={newReview}
           onChange={(e) => setNewReview(e.target.value)}
         ></textarea>
-
-        {/* Star Rating Input */}
         <div className="flex items-center space-x-2 mt-4">
           <span className="text-lg font-semibold text-white">Your Rating:</span>
           <div className="flex space-x-1">
@@ -174,6 +202,12 @@ const MovieDetails = () => {
           Submit Review
         </button>
       </div>
+      <ToastContainer 
+                position="top-center"  
+                autoClose={5000}        
+                hideProgressBar={true}  
+                closeButton={false}
+            />
     </div>
   );
 };

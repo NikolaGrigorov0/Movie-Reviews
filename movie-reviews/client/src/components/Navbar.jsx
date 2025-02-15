@@ -5,15 +5,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { fetchUser, getUserIdFromToken } from '../services/userService'
 
 const publicNavigation = [
-  { name: 'Top 10', href: '/top10', current: false },
-  { name: 'Lists', href: '/lists', current: false },
-  { name: 'Sign up', href: 'signUp', current: false },
-  { name: 'Log in', href: 'login', current: false },
+  { name: 'Home', href: '/', current: false },
+  { name: 'Top 20', href: '/top20', current: false },
+  /* {name: 'Lists', href: '/lists', current: false} */
 ]
 
 const privateNavigation = [
-  { name: 'Top 10', href: '/top10', current: false },
-  { name: 'Lists', href: '/lists', current: false },
+  { name: 'Home', href: '/', current: false },
+  { name: 'Top 20', href: '/top20', current: false }
+  /*{name: 'Lists', href: '/lists', current: false} */
 ]
 
 function classNames(...classes) {
@@ -88,8 +88,8 @@ export default function Navbar() {
             <Link to={'/'}>
               <img
                 alt="Logo nav"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto hover:bg-gray-700 rounded-md"
+                src="/images/logo1.png"
+                className="h-8 w-auto rounded-md"
               />
             </Link>
             <div className="hidden sm:ml-6 sm:block">
@@ -137,8 +137,12 @@ export default function Navbar() {
 )}
 
             </div>
-            
-            {/* Profile dropdown */}
+            {!isLogged && (
+              <>
+                <a href="signUp" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Sign up</a>
+                <a href="login" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Log in</a>
+              </>
+            )}
             {isLogged && (
               <Menu as="div" className="relative ml-3">
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-indigo-600">

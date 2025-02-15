@@ -52,7 +52,6 @@ C:\Users\bdemi\OneDrive\Desktop\-\Projects\Movie Reviews\Movie-Reviews\movie-rev
 C:\Users\bdemi\OneDrive\Desktop\-\Projects\Movie Reviews\Movie-Reviews\movie-reviews\server\obj\Debug\net9.0\ref\server.dll
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\appsettings.json
-C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\StaticData\movies.json
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\server.staticwebassets.endpoints.json
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\server.exe
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\server.deps.json
@@ -103,4 +102,3 @@ C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\obj\Debug\net9
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\obj\Debug\net9.0\server.pdb
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\obj\Debug\net9.0\server.genruntimeconfig.cache
 C:\Users\user\Documents\GitHub\Movie-Reviews\movie-reviews\server\obj\Debug\net9.0\ref\server.dll
-C:\Users\bdemi\OneDrive\Desktop\-\Projects\Movie Reviews\Movie-Reviews\movie-reviews\server\bin\Debug\net9.0\StaticData\movies.json

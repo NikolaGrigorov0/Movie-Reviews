@@ -221,10 +221,10 @@ const EditProfile = () => {
                 </div>
             </div>
             <ToastContainer 
-                position="top-center"  // Toast positioned at the top center
-                autoClose={5000}        // Toast auto close time in milliseconds
-                hideProgressBar={true}  // Hide progress bar (optional)
-                closeButton={false}     // Optionally hide the close button
+                position="top-center"  
+                autoClose={5000}        
+                hideProgressBar={true}  
+                closeButton={false}
             />
         </div>
     ) : (
