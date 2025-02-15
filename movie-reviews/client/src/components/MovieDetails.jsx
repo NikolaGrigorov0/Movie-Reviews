@@ -15,7 +15,7 @@ const generateReviewStars = (rating) => {
         <FontAwesomeIcon
           key={`full-${i}`}
           icon={faStar}
-          className="text-yellow-400 text-2xl"
+          className="text-yellow-400 text-lg md:text-2xl"
         />
       );
     } else if (rating >= i - 0.5) {
@@ -23,7 +23,7 @@ const generateReviewStars = (rating) => {
         <FontAwesomeIcon
           key={`half-${i}`}
           icon={faStarHalfAlt}
-          className="text-yellow-400 text-2xl"
+          className="text-yellow-400 text-lg md:text-2xl"
         />
       );
     } else {
@@ -31,12 +31,12 @@ const generateReviewStars = (rating) => {
         <FontAwesomeIcon
           key={`empty-${i}`}
           icon={faStar}
-          className="text-gray-700 text-2xl"
+          className="text-gray-700 text-lg md:text-2xl"
         />
       );
     }
   }
-  return stars;
+  return <div className="flex flex-wrap">{stars}</div>;
 };
 
 const MovieDetails = () => {
@@ -45,7 +45,7 @@ const MovieDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
   const [newRating, setNewRating] = useState(0);
-  const [userDetails, setUserDetails] = useState({}); // Store user details for each review
+  const [userDetails, setUserDetails] = useState({});
   const userId = getUserIdFromToken(localStorage.getItem("token"));
 
   useEffect(() => {
@@ -58,7 +58,6 @@ const MovieDetails = () => {
         setMovie(data);
         setReviews(data.reviews || []);
 
-        // Fetch user details for each review
         const userDetailsMap = {};
         for (const review of data.reviews || []) {
           const user = await fetchUser(review.userId);
@@ -96,26 +95,24 @@ const MovieDetails = () => {
       const data = await response.json();
       console.log("Review submitted successfully:", data);
 
-      // Fetch the user details for the new review
       const user = await fetchUser(userId);
       setUserDetails((prev) => ({ ...prev, [userId]: user }));
 
-      // Add the new review to the reviews list
       setReviews((prev) => [...prev, { ...reviewData, userId }]);
       setNewReview("");
       setNewRating(0);
       window.location.reload();
     } catch (error) {
       console.error("Error adding review:", error);
-      toast.error("An error occurred while submitting the review.")
+      toast.error("An error occurred while submitting the review.");
     }
   };
 
   if (!movie) return <p className="text-center text-gray-400">Loading movie details...</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-gray-900 rounded-lg shadow-xl mt-8">
-      <h1 className="text-4xl font-extrabold mb-6 text-white">{movie.title}</h1>
+    <div className="max-w-5xl mx-auto p-6 bg-gray-900 rounded-lg shadow-xl mt-8">
+      <h1 className="text-3xl md:text-4xl font-extrabold mb-6 text-white">{movie.title}</h1>
 
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-1/2">
@@ -128,15 +125,14 @@ const MovieDetails = () => {
 
         <div className="w-full md:w-1/2 space-y-4">
           <p className="text-lg text-gray-300">{movie.description}</p>
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center space-x-2">
             <span className="text-lg font-semibold text-white">Rating:</span>
-            <div className="flex">{movie.starRating ? generateReviewStars(movie.starRating) : "No rating available"}</div>
+            <div className="flex flex-wrap">{movie.starRating ? generateReviewStars(movie.starRating) : "No rating available"}</div>
             <span className="text-gray-300 text-lg">({movie.starRating}/10)</span>
           </div>
         </div>
       </div>
 
-      {/* Reviews Section */}
       <div className="mt-12">
         <h2 className="text-3xl font-bold mb-4 text-white">Reviews</h2>
         <div className="space-y-4">
@@ -153,11 +149,10 @@ const MovieDetails = () => {
                     {userDetails[review.userId]?.username || "Anonymous"}
                   </span>
                 </div>
-                <div className="flex items-center mb-2">
+                <div className="flex flex-wrap items-center mb-2">
                   {generateReviewStars(review.rating)}
                   <span className="ml-2 text-gray-400 text-lg">({review.rating}/10)</span>
                 </div>
-
                 <p className="text-gray-300">{review.description}</p>
               </div>
             ))
@@ -167,49 +162,35 @@ const MovieDetails = () => {
         </div>
       </div>
 
-      {/* Add Review */}
       {localStorage.getItem('token') !== null && (
-      <div className="bg-shadow-md border-solid border-2 border-violet-900 rounded-lg p-5 mt-12">
-        <h2 className="text-3xl font-bold mb-4 text-white">Add Your Review</h2>
-        <textarea
-          className="w-full p-4 bg-gray-800 rounded-lg text-white placeholder-gray-400 border border-gray-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-600 transition"
-          placeholder="Write your review here..."
-          value={newReview}
-          onChange={(e) => setNewReview(e.target.value)}
-        ></textarea>
-        <div className="flex items-center space-x-2 mt-4">
-          <span className="text-lg font-semibold text-white">Your Rating:</span>
-          <div className="flex space-x-1">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
+        <div className="bg-gray-800 p-5 mt-12 rounded-lg shadow-md">
+          <h2 className="text-3xl font-bold mb-4 text-white">Add Your Review</h2>
+          <textarea
+            className="w-full p-4 bg-gray-800 rounded-lg text-white placeholder-gray-400 border border-gray-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-600 transition"
+            placeholder="Write your review here..."
+            value={newReview}
+            onChange={(e) => setNewReview(e.target.value)}
+          ></textarea>
+          <div className="flex flex-wrap items-center space-x-2 mt-4">
+            <span className="text-lg font-semibold text-white">Your Rating:</span>
+            {[...Array(10)].map((_, i) => (
               <button
-                key={star}
-                type="button"
-                onClick={() => setNewRating(star)}
-                className={`text-2xl ${
-                  newRating >= star ? "text-yellow-400" : "text-gray-500"
+                key={i + 1}
+                onClick={() => setNewRating(i + 1)}
+                className={`text-lg md:text-2xl ${
+                  newRating >= i + 1 ? "text-yellow-400" : "text-gray-500"
                 } hover:text-yellow-400 transition`}
               >
                 <FontAwesomeIcon icon={faStar} />
               </button>
             ))}
           </div>
-          <span className="text-gray-300 text-lg">({newRating}/10)</span>
+          <button onClick={handleAddReview} className="mt-4 px-6 py-3 bg-violet-900 hover:bg-violet-700 rounded-lg text-lg font-semibold transition">
+            Submit Review
+          </button>
         </div>
-
-        <button
-          onClick={handleAddReview}
-          className="mt-4 px-6 py-3 bg-violet-900 hover:bg-violet-700 rounded-lg text-lg font-semibold transition"
-        >
-          Submit Review
-        </button>
-      </div>
-    )}
-      <ToastContainer 
-                position="top-center"  
-                autoClose={5000}        
-                hideProgressBar={true}  
-                closeButton={false}
-            />
+      )}
+      <ToastContainer position="top-center" autoClose={5000} hideProgressBar closeButton={false} />
     </div>
   );
 };
