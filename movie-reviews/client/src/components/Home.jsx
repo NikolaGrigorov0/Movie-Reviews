@@ -135,7 +135,7 @@ const Home = () => {
             ))}
           </div>
 
-          {/* Lists Section */}
+          {/* Lists Section 
           <div className="bg-gray-900 p-5 rounded-lg flex flex-col space-y-4">
             <h2 className="text-3xl font-bold mb-6">Lists</h2>
             <div className="bg-gray-700 w-full h-20 rounded-md"></div>
@@ -143,6 +143,7 @@ const Home = () => {
             <div className="bg-gray-700 w-full h-20 rounded-md"></div>
             <div className="bg-gray-700 w-full h-20 rounded-md"></div>
           </div>
+          */}
         </div>
       </section>
     </>

@@ -19,9 +19,9 @@ namespace server.Models
         public required string Image { get; set; }
 
         [BsonElement("starRating")]
-        public double StarRating { get; set; }  // ⭐ Added Rating
+        public double StarRating { get; set; }  
 
         [BsonElement("reviews")]
-        public List<Review> Reviews { get; set; } = new List<Review>(); // ✅ Updated to store multiple reviews
+        public List<Review> Reviews { get; set; } = new List<Review>(); 
     }
 }

@@ -26,6 +26,7 @@ namespace server.Services
         }
 
         public void Update(string id, Movie movieIn) =>
+        
             _movies.ReplaceOne(movie => movie.Id == id, movieIn);
 
         public void Remove(string id) => _movies.DeleteOne(movie => movie.Id == id);

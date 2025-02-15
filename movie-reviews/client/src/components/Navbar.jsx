@@ -6,14 +6,14 @@ import { fetchUser, getUserIdFromToken } from '../services/userService'
 
 const publicNavigation = [
   { name: 'Top 10', href: '/top10', current: false },
-  { name: 'Lists', href: '/lists', current: false },
+  /* {name: 'Lists', href: '/lists', current: false} */,
   { name: 'Sign up', href: 'signUp', current: false },
   { name: 'Log in', href: 'login', current: false },
 ]
 
 const privateNavigation = [
-  { name: 'Top 10', href: '/top10', current: false },
-  { name: 'Lists', href: '/lists', current: false },
+  { name: 'Top 10', href: '/top10', current: false }
+  /*{name: 'Lists', href: '/lists', current: false} */
 ]
 
 
