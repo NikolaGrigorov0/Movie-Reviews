@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 import { fetchUser, getUserIdFromToken } from "../services/userService";
+import { toast, ToastContainer } from "react-toastify";
 
 const generateReviewStars = (rating) => {
   const stars = [];
@@ -74,7 +75,7 @@ const MovieDetails = () => {
 
   const handleAddReview = async () => {
     if (!newReview.trim() || newRating === 0) {
-      alert("Please add a review and select a star rating.");
+      toast.error("Please add a review and select a star rating.");
       return;
     }
 
@@ -106,7 +107,7 @@ const MovieDetails = () => {
       window.location.reload();
     } catch (error) {
       console.error("Error adding review:", error);
-      alert(error.message || "An error occurred while submitting the review.");
+      toast.error("An error occurred while submitting the review.")
     }
   };
 
@@ -201,6 +202,12 @@ const MovieDetails = () => {
           Submit Review
         </button>
       </div>
+      <ToastContainer 
+                position="top-center"  
+                autoClose={5000}        
+                hideProgressBar={true}  
+                closeButton={false}
+            />
     </div>
   );
 };
