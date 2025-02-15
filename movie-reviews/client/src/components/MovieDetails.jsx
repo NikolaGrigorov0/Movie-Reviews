@@ -168,6 +168,7 @@ const MovieDetails = () => {
       </div>
 
       {/* Add Review */}
+      {localStorage.getItem('token') !== null && (
       <div className="bg-shadow-md border-solid border-2 border-violet-900 rounded-lg p-5 mt-12">
         <h2 className="text-3xl font-bold mb-4 text-white">Add Your Review</h2>
         <textarea
@@ -202,6 +203,7 @@ const MovieDetails = () => {
           Submit Review
         </button>
       </div>
+    )}
       <ToastContainer 
                 position="top-center"  
                 autoClose={5000}        
