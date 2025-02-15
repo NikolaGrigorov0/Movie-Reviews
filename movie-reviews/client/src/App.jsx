@@ -7,6 +7,7 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
 import MovieDetails from "./components/MovieDetails";
+import Top20 from "./components/Top20";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
      <Route path='/profile' element={<Profile/>}/>
      <Route path='/editprofile' element={<EditProfile/>}/>
      <Route path='/movie/:id' element={<MovieDetails/>}/>
+     <Route path='/top20' element={<Top20/>}/>
      </Routes>
       
       {/* Footer */}
