@@ -18,10 +18,16 @@ namespace server.Models
         [BsonElement("image")]
         public required string Image { get; set; }
 
+        private double _starRating;
+
         [BsonElement("starRating")]
-        public double StarRating { get; set; }  // ⭐ Added Rating
+        public double StarRating
+        {
+            get => Math.Round(_starRating, 2);
+            set => _starRating = Math.Round(value, 2);
+        }
 
         [BsonElement("reviews")]
-        public List<Review> Reviews { get; set; } = new List<Review>(); // ✅ Updated to store multiple reviews
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }
