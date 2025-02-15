@@ -34,13 +34,13 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative py-32 bg-black bg-[url('/images/Godfather.webp')] bg-cover bg-center h-[780px] pt-75">
+      <section className="relative py-32 bg-black bg-[url('/images/Godfather.webp')] bg-cover bg-center h-[780px] pt-75 flex items-center">
         <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.8)_100%)]"></div>
-        <div className="relative z-10 flex flex-col items-start justify-center h-auto w-1/3 pl-16">
-          <h1 className="text-6xl font-extrabold text-gray-300 mb-4">
+        <div className="relative z-10 flex flex-col items-center md:items-start justify-center h-auto max-w-full px-6 md:px-16 text-center md:text-left">
+          <h1 className="text-3xl md:text-6xl font-extrabold text-gray-300 mb-4">
             Explore the World of Cinema
           </h1>
-          <p className="text-lg font-extrabold text-gray-300 max-w-2xl">
+          <p className="text-base md:text-lg font-extrabold text-gray-300 max-w-2xl">
             Discover reviews, ratings, and insights from fellow movie lovers.
           </p>
           <button
