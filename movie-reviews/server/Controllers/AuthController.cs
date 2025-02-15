@@ -21,7 +21,7 @@ namespace server.Controllers
             _config = config;
         }
 
-       [HttpPost("register")]
+        [HttpPost("register")]
         public IActionResult Register([FromBody] User user)
         {
             if (user == null || string.IsNullOrWhiteSpace(user.Email) || string.IsNullOrWhiteSpace(user.PasswordHash))
@@ -42,7 +42,7 @@ namespace server.Controllers
             var registeredUser = _userService.Register(user);
             return Ok(new { message = "User registered successfully!", user = registeredUser });
         }
-        
+
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
