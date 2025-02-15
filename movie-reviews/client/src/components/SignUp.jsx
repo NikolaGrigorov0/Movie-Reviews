@@ -31,10 +31,6 @@ function SignUp() {
       errors.password = "Password is required.";
     } else if (password.length < 8) {
       errors.password = "Password must be at least 8 characters long.";
-    } else if (!/[A-Z]/.test(password)) {
-      errors.password = "Password must contain at least one uppercase letter.";
-    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      errors.password = "Password must contain at least one special character.";
     }
 
     if (password !== confirmPassword) {
